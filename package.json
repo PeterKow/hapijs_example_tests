@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "nodemon server.js",
-    "test": "lab -c"
+    "test": "lab -c",
+    "test-cover": "./node_modules/lab/bin/lab -c -r html -o ./test/artifacts/coverage.html && open ./test/artifacts/coverage.html"
   },
   "repository": {
     "type": "git",
@@ -29,5 +30,9 @@
     "hapi": "^9.2.0",
     "joi": "^6.6.1",
     "q": "^1.4.1"
+  },
+  "devDependencies": {
+    "code": "^1.5.0",
+    "lab": "^5.16.0"
   }
 }
