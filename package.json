@@ -1,0 +1,30 @@
+{
+  "name": "hapijs_example_test",
+  "version": "0.0.0",
+  "description": "Example hapijs implementation with testing Lab",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js",
+    "test": "lab -c"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PeterKow/hapijs_example_tests.git"
+  },
+  "keywords": [
+    "hapijs",
+    "lab",
+    "joy"
+  ],
+  "author": "Peter Kowalczyk",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PeterKow/hapijs_example_tests/issues"
+  },
+  "homepage": "https://github.com/PeterKow/hapijs_example_tests#readme",
+  "dependencies": {
+    "confidence": "^1.2.0",
+    "glue": "^2.2.0",
+    "hapi": "^9.2.0"
+  }
+}
