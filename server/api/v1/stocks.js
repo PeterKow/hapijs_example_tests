@@ -16,7 +16,10 @@ exports.register = function(server, options, next){
       }
     },
     handler: function(request, reply){
-      reply();
+      server.methods.getStockById(request.params.id, function(data){
+        console.log('data --', data);
+        reply(data);
+      })
     }
   });
 
