@@ -5,18 +5,26 @@ var Lab = require('Lab');
 var lab = exports.lab = Lab.script();
 var Code = require('code');
 var Hapi = require('hapi');
-var path = require('path');
+var Path = require('path');
+var Proxyquire = require('proxyquire');
 var base = process.env.PWD;
-var config = require(path.join(base,  './config'));
-var ProjectPlugin = require(path.join(base,  '/server/api/v1/stocks'));
-var ModelPlugin = require(path.join(base,  '/server/model/stock.model'));
+var config = require(Path.join(base,  './config'));
+var ProjectPlugin = require(Path.join(base,  '/server/api/v1/stocks'));
+var db = require(Path.join(base,  '/server/model/db'));
 
-var server;
-var request = {};
+var server, request, stub;
 
 lab.beforeEach(function(done){
 
-  var plugins = [ProjectPlugin, ModelPlugin];
+  stub = {
+    db: db
+  };
+
+  var ModelPlugin = Proxyquire(base + '/server/model/stock.model', {
+    './db': stub.db
+  });
+
+  var plugins = [ProjectPlugin, ModelPlugin ];
 
   server = new Hapi.Server();
   server.connection({ port: config.get('/connections/port') });
@@ -45,7 +53,6 @@ lab.experiment('GET /stock/{id}', function(){
   });
 
   lab.test('Should return successful response', function(done){
-    // We assume that stock already exists, for now we don't have method to add new stock first
     server.inject(request, function(response) {
       Code.expect(response.result).to.deep.equal(
         {
@@ -67,7 +74,7 @@ lab.experiment('GET /stock/{id}', function(){
   });
 
   lab.test('Should return error response for not string id', function(done){
-    request = createRequestGetStock(023);
+    request = createRequestGetStock([023]);
     server.inject(request, function(response) {
       Code.expect(response.statusCode).to.equal(400);
       done();
@@ -106,7 +113,7 @@ lab.experiment('GET /stock', function() {
   lab.test('Should return successful response', function(done){
     server.inject(request, function(response) {
       Code.expect(response.result).to.be.an.array();
-      // For now hardcoded 2
+      Code.expect(stub.db.length).to.equal(2);
       Code.expect(response.result.length).to.equal(2);
       Code.expect(response.statusCode).to.equal(200);
       done();
@@ -140,6 +147,7 @@ lab.experiment('DELETE /stock/{id]', function() {
           "name": "Widget",
           "price": "77772.54"
         });
+      Code.expect(stub.db.length).to.equal(1);
       Code.expect(response.result.id).to.equal(stockId);
       Code.expect(response.statusCode).to.equal(200);
       done();

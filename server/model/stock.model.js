@@ -22,7 +22,7 @@ function getAllStock(next){
   return next(db);
 }
 
-function deleteStockById(id, next){
+function deleteStockById(id, next) {
 
   var index = findStockById(id);
   checkIndex(index, id);
@@ -39,10 +39,9 @@ function getStockById(id, next) {
   checkIndex(index, id);
 
   return next(db[index]);
-
 }
 
-function checkIndex (index, id){
+function checkIndex (index, id) {
   if(index === -1 ) {
     throw Boom.notFound('Stock id: ' + id + ' not found');
   }
