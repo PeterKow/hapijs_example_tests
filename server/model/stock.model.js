@@ -30,7 +30,7 @@ function deleteStockById(id, next) {
   var result = db[index];
   db.splice(index, 1);
 
-  return next(result);
+  return next(null, result);
 }
 
 function getStockById(id, next) {

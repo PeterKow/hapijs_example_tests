@@ -51,7 +51,12 @@ exports.register = function(server, options, next){
 
       var deleteStockById = Q.nbind(server.methods.deleteStockById);
       deleteStockById(request.params.id)
+        .then(successReply)
         .catch(reply);
+
+      function successReply(){
+        return reply().code(204);
+      }
     }
   });
 

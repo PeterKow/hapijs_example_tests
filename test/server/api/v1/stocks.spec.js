@@ -48,6 +48,7 @@ lab.experiment('GET /stock/{id}', function(){
 
     var stockId = '0001';
     request = createRequestGetStock(stockId);
+    stub.db = db;
 
     done();
   });
@@ -106,7 +107,7 @@ lab.experiment('GET /stock', function() {
       method: 'GET',
       url: '/stock'
     };
-
+    stub.db = db;
     done();
   });
 
@@ -134,6 +135,7 @@ lab.experiment('DELETE /stock/{id]', function() {
   lab.beforeEach(function(done) {
     var stockId = '0002';
     request = createDeleteRequest(stockId);
+    stub.db = db;
     done();
   });
 
@@ -141,15 +143,7 @@ lab.experiment('DELETE /stock/{id]', function() {
     var stockId = '0002';
     request = createDeleteRequest(stockId);
     server.inject(request, function(response) {
-      Code.expect(response.result).to.deep.equal(
-        {
-          "id": "0002",
-          "name": "Widget",
-          "price": "77772.54"
-        });
-      Code.expect(stub.db.length).to.equal(1);
-      Code.expect(response.result.id).to.equal(stockId);
-      Code.expect(response.statusCode).to.equal(200);
+      Code.expect(response.statusCode).to.equal(204);
       done();
     })
   });
