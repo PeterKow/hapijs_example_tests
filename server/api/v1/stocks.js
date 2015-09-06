@@ -2,6 +2,7 @@
  * Created by Peter on 06/09/15.
  */
 var Joi = require('joi');
+var Q = require('q');
 
 exports.register = function(server, options, next){
 
@@ -16,10 +17,12 @@ exports.register = function(server, options, next){
       }
     },
     handler: function(request, reply){
-      server.methods.getStockById(request.params.id, function(data){
-        console.log('data --', data);
-        reply(data);
-      })
+
+      var getStockById = Q.nbind(server.methods.getStockById);
+
+      getStockById(request.params.id)
+        // it's not an accidence that we have only catch - node promise
+        .catch(reply);
     }
   });
 
