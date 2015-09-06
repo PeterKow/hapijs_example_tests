@@ -14,13 +14,6 @@ var ModelPlugin = require(path.join(base,  '/server/model/stock.model'));
 var server;
 var request = {};
 
-function getStockRequest(id){
-  return {
-    method: 'GET',
-    url: '/stock/' + id
-  };
-}
-
 lab.beforeEach(function(done){
 
   var plugins = [ProjectPlugin, ModelPlugin];
@@ -34,7 +27,14 @@ lab.beforeEach(function(done){
 
 });
 
-lab.experiment('GET stock/{id}', function(){
+lab.experiment('GET /stock/{id}', function(){
+
+  function getStockRequest(id){
+    return {
+      method: 'GET',
+      url: '/stock/' + id
+    };
+  }
 
   lab.beforeEach(function(done) {
 
@@ -45,9 +45,14 @@ lab.experiment('GET stock/{id}', function(){
   });
 
   lab.test('Should return successful response', function(done){
-    // TODO: correct test with inserting and then checking
-    // TODO: check the response object -> id name, price
+    // We assume that stock already exists, for now we don't have method to add new stock first
     server.inject(request, function(response) {
+      Code.expect(response.result).to.deep.equal(
+        {
+          "id": "0001",
+          "name": "Widget",
+          "price": "2.54"
+        });
       Code.expect(response.statusCode).to.equal(200);
       done();
     })
@@ -69,7 +74,7 @@ lab.experiment('GET stock/{id}', function(){
     })
   });
 
-  lab.test('Should return error response for empty string id', {only: true}, function(done){
+  lab.test('Should return error response for empty string id', function(done){
     request = getStockRequest('""');
     server.inject(request, function(response) {
       Code.expect(response.statusCode).to.equal(400);
@@ -85,5 +90,27 @@ lab.experiment('GET stock/{id}', function(){
     })
   });
 
+});
+
+lab.experiment('GET /stock', function() {
+
+  lab.beforeEach(function(done) {
+    request = {
+      method: 'GET',
+      url: '/stock'
+    };
+
+    done();
+  });
+
+  lab.test('Should return successful response', function(done){
+    server.inject(request, function(response) {
+      Code.expect(response.result).to.be.an.array();
+      // For now hardcoded 2
+      Code.expect(response.result.length).to.equal(2);
+      Code.expect(response.statusCode).to.equal(200);
+      done();
+    })
+  });
 
 });

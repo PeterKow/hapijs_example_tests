@@ -26,6 +26,17 @@ exports.register = function(server, options, next){
     }
   });
 
+  server.route({
+    method: 'GET',
+    path: '/stock',
+    handler: function(request, reply){
+
+      var getAllStock = Q.nbind(server.methods.getAllStock);
+      getAllStock()
+        .catch(reply);
+    }
+  });
+
   next();
 };
 
