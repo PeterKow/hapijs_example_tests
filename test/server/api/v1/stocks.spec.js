@@ -45,6 +45,8 @@ lab.experiment('GET stock/{id}', function(){
   });
 
   lab.test('Should return successful response', function(done){
+    // TODO: correct test with inserting and then checking
+    // TODO: check the response object -> id name, price
     server.inject(request, function(response) {
       Code.expect(response.statusCode).to.equal(200);
       done();
@@ -53,6 +55,22 @@ lab.experiment('GET stock/{id}', function(){
 
   lab.test('Should return error response for shorter than 4 characters id', function(done){
     request = getStockRequest('023');
+    server.inject(request, function(response) {
+      Code.expect(response.statusCode).to.equal(400);
+      done();
+    })
+  });
+
+  lab.test('Should return error response for not string id', function(done){
+    request = getStockRequest(023);
+    server.inject(request, function(response) {
+      Code.expect(response.statusCode).to.equal(400);
+      done();
+    })
+  });
+
+  lab.test('Should return error response for empty string id', {only: true}, function(done){
+    request = getStockRequest('""');
     server.inject(request, function(response) {
       Code.expect(response.statusCode).to.equal(400);
       done();
