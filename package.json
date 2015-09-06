@@ -23,8 +23,10 @@
   },
   "homepage": "https://github.com/PeterKow/hapijs_example_tests#readme",
   "dependencies": {
+    "boom": "^2.8.0",
     "confidence": "^1.2.0",
     "glue": "^2.2.0",
-    "hapi": "^9.2.0"
+    "hapi": "^9.2.0",
+    "joi": "^6.6.1"
   }
 }

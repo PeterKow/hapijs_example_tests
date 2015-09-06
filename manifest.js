@@ -11,6 +11,7 @@ var manifest = {
   },
   connections: [ config.get('/connections') ],
   plugins: {
+    './server/api/v1/stocks': {basePath: 'api/v1'}
   }
 };
 
