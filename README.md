@@ -7,9 +7,9 @@ Example hapijs implementation with testing "Lab"
 **Run on port 8000**
 `npm run start`
 
-**Lab**
+**Running Tests**
 
- - Test
- - Test file
- - Test coverage
+ - Test `npm run test`
+ - Test coverage `npm run test-cover`
+ - Test file `lab test/server/api/v1/stocks.js`
 
