@@ -29,7 +29,7 @@ lab.beforeEach(function(done){
 
 lab.experiment('GET /stock/{id}', function(){
 
-  function getStockRequest(id){
+  function createRequestGetStock(id){
     return {
       method: 'GET',
       url: '/stock/' + id
@@ -39,7 +39,7 @@ lab.experiment('GET /stock/{id}', function(){
   lab.beforeEach(function(done) {
 
     var stockId = '0001';
-    request = getStockRequest(stockId);
+    request = createRequestGetStock(stockId);
 
     done();
   });
@@ -59,7 +59,7 @@ lab.experiment('GET /stock/{id}', function(){
   });
 
   lab.test('Should return error response for shorter than 4 characters id', function(done){
-    request = getStockRequest('023');
+    request = createRequestGetStock('023');
     server.inject(request, function(response) {
       Code.expect(response.statusCode).to.equal(400);
       done();
@@ -67,7 +67,7 @@ lab.experiment('GET /stock/{id}', function(){
   });
 
   lab.test('Should return error response for not string id', function(done){
-    request = getStockRequest(023);
+    request = createRequestGetStock(023);
     server.inject(request, function(response) {
       Code.expect(response.statusCode).to.equal(400);
       done();
@@ -75,7 +75,7 @@ lab.experiment('GET /stock/{id}', function(){
   });
 
   lab.test('Should return error response for empty string id', function(done){
-    request = getStockRequest('""');
+    request = createRequestGetStock('""');
     server.inject(request, function(response) {
       Code.expect(response.statusCode).to.equal(400);
       done();
@@ -83,7 +83,7 @@ lab.experiment('GET /stock/{id}', function(){
   });
 
   lab.test('Should return 404 for undefined id', function(done){
-    request = getStockRequest('XXXX');
+    request = createRequestGetStock('XXXX');
     server.inject(request, function(response) {
       Code.expect(response.statusCode).to.equal(404);
       done();
@@ -109,6 +109,57 @@ lab.experiment('GET /stock', function() {
       // For now hardcoded 2
       Code.expect(response.result.length).to.equal(2);
       Code.expect(response.statusCode).to.equal(200);
+      done();
+    })
+  });
+
+});
+
+lab.experiment('DELETE /stock/{id]', function() {
+
+  function createDeleteRequest(id){
+    return request = {
+      method: 'DELETE',
+      url: '/stock/' + id
+    };
+  }
+
+  lab.beforeEach(function(done) {
+    var stockId = '0002';
+    request = createDeleteRequest(stockId);
+    done();
+  });
+
+  lab.test('Should return successful response', function(done) {
+    var stockId = '0002';
+    request = createDeleteRequest(stockId);
+    server.inject(request, function(response) {
+      Code.expect(response.result).to.deep.equal(
+        {
+          "id": "0002",
+          "name": "Widget",
+          "price": "77772.54"
+        });
+      Code.expect(response.result.id).to.equal(stockId);
+      Code.expect(response.statusCode).to.equal(200);
+      done();
+    })
+  });
+
+  lab.test('Should return 404 for missing id', function(done) {
+    var stockId = '0099';
+    request = createDeleteRequest(stockId);
+    server.inject(request, function(response) {
+      Code.expect(response.statusCode).to.equal(404);
+      done();
+    })
+  });
+
+  lab.test('Should return error for malformed id', function(done) {
+    var stockId = 'XXX';
+    request = createDeleteRequest(stockId);
+    server.inject(request, function(response) {
+      Code.expect(response.statusCode).to.equal(400);
       done();
     })
   });

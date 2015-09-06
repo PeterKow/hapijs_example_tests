@@ -9,6 +9,8 @@ exports.register = function(server, options, next){
 
   server.method('getStockById', getStockById);
   server.method('getAllStock', getAllStock);
+  server.method('deleteStockById', deleteStockById);
+
   next();
 };
 
@@ -20,16 +22,34 @@ function getAllStock(next){
   return next(db);
 }
 
+function deleteStockById(id, next){
+
+  var index = findStockById(id);
+  checkIndex(index, id);
+
+  var result = db[index];
+  db.splice(index, 1);
+
+  return next(result);
+}
+
 function getStockById(id, next) {
 
-  var index = _.findIndex(db, function(stock){
-    return stock.id === id
-  });
-
-  if(index === -1 ) {
-    throw Boom.notFound('Stock id: ' + id + ' not found');
-  }
+  var index = findStockById(id);
+  checkIndex(index, id);
 
   return next(db[index]);
 
+}
+
+function checkIndex (index, id){
+  if(index === -1 ) {
+    throw Boom.notFound('Stock id: ' + id + ' not found');
+  }
+}
+
+function findStockById(id){
+  return _.findIndex(db, function(stock){
+    return stock.id === id
+  });
 }

@@ -37,6 +37,24 @@ exports.register = function(server, options, next){
     }
   });
 
+  server.route({
+    method: 'DELETE',
+    path: '/stock/{id}',
+    config: {
+      validate: {
+        params: {
+          id: Joi.string().min(4).required()
+        }
+      }
+    },
+    handler: function(request, reply){
+
+      var deleteStockById = Q.nbind(server.methods.deleteStockById);
+      deleteStockById(request.params.id)
+        .catch(reply);
+    }
+  });
+
   next();
 };
 
