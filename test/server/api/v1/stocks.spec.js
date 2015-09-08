@@ -1,7 +1,7 @@
 /**
  * Created by Peter on 06/09/15.
  */
-var Lab = require('Lab');
+var Lab = require('lab');
 var lab = exports.lab = Lab.script();
 var Code = require('code');
 var Hapi = require('hapi');
